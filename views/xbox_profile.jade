@@ -1,10 +1,10 @@
 extends layout
 block append content
 	ul.nav.nav-tabs.nav-pills
+		li
+			a(href="/#{route}") Profile
 		li.active
 			a(href="/#{route}/xbox") Xbox
-		li
-			a(href="/#{route}/xbox/achivements") Achivements
 	.header
 		img.avatar(src="#{profile.AvatarLarge}")
 		span.gt #{profile.Gamertag}
@@ -23,7 +23,6 @@ block append content
 						div.bar.bar-success(style="width: #{games.TotalPercentCompleted}%;")
 						- var percent = 100 - games.TotalPercentCompleted;
 						div.bar.bar-warning(style="width: #{percent}%;")
-					img(src="#{profile.AvatarBody}")
 				ul.thumbnails
 					each game in games.PlayedGames
 						li.span3
@@ -31,3 +30,6 @@ block append content
 								img(src="#{game.LargeBoxArt}")
 								a(href="#{game.Url}")
 									h3 #{game.Title}
+								a.btn(href="/#{route}/xbox/achivements/#{game.Id}")
+									i.icon-gift
+									| Achivements

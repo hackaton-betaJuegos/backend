@@ -1,6 +1,7 @@
 var db    = require(__dirname + '/db'),
   express = require('express'),
-	request = require('request');
+	request = require('request'),
+  moment  = require('moment'),
 // 	steam = require(__dirname + '/steam'),
  	xbox = require(__dirname + '/xbox');
 
@@ -31,7 +32,7 @@ app.post('/register', function (req, res){
   });
 });
 
-app.get('/api/:username', function (req, res){
+app.get('/api/user/:username', function (req, res){
   db.getUserDataByUsername(req.params.username, function (user){
     res.send(user);
   });
@@ -47,15 +48,27 @@ app.post('/api/addGame', function (req, res){
   });
 });
 
-app.get('/api/publishedGames', function (req, res){
-  db.getPublishedGames(function (games){
+app.get('/api/addGameToUser/:username/:id', function (req, res){
+  db.addGameToUser(req.params.username, req.params.id, function (data) {
+    res.send(data);
+  });
+});
+
+app.get('/api/games', function (req, res){
+  db.getGames(function (games){
     res.send(games);
   });
 });
 
-app.get('/api/addXbox/:username/:profile', function (req, res){
-  db.addUserXboxProfile(req.params.username, req.params.profile, function (user) {
-    res.send(user);
+app.post('/api/addXboxProfile/:username', function (req, res){
+  db.addUserXboxProfile(req.params.username, req.body.gamertag, function (user) {
+    res.redirect('/'+user.username+'/xbox');
+  });
+});
+
+app.get('/:username', function (req, res){
+  db.getUserDataByUsername(req.params.username, function (user){
+    res.render('profile.jade', {user: user, route: req.params.username});
   });
 });
 
@@ -67,6 +80,15 @@ app.get('/:username/xbox', function (req, res){
   			res.render('xbox_profile.jade', {profile: profile.Data, games: games.Data, route: req.params.username});
   		});
   	});
+  });
+});
+
+app.get('/:profile/xbox/achivements/:id', function (req, res){
+  db.getUserDataByUsername(req.params.profile, function (username){
+    console.log(username);
+    xbox.getAchivementsFromIdAndGamertag(req.params.id, username.xboxProfile, function (achivements) {
+      res.render('achivements.jade', {route: req.params.profile, game: achivements.Data});
+    });
   });
 });
 app.listen(80);

@@ -1,0 +1,22 @@
+extends layout
+block append content
+	ul.nav.nav-tabs.nav-pills
+		li.active
+			a Profile
+		li
+			a(href="/#{route}/xbox") Xbox
+	h4 #{user.username}
+	img(src="#{user.avatar}", style="border-radius: 50px;")
+		each game in games
+			p game.name
+			p Joined #{date}
+	if user.xboxProfile
+		h4 Xbox Live Gamertag: #{user.xboxProfile}
+	else
+		form.block-form(method="post", action="/api/addXboxProfile/#{route}")
+			label Add xbox Live Gamertag:
+			div.input-prepend
+				span.add-on
+						i.icon-user
+				input.appendedInput(type="text", name="gamertag", required, placeholder="Viking007")
+			button.btn.btn-primary Add Gamertag

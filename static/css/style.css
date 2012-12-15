@@ -7,6 +7,18 @@
 	font-size: 50px;
 	vertical-align: middle;
 }
+
+.gametitle{
+	padding-left: 5px;
+	font-size: 50px;
+	vertical-align: text-top;
+}
+
+.l{
+	font-variant: inherit;
+	padding-left: 10px;
+}
+
 .last{
 	padding-left: 10px;
 	font-variant: inherit;
@@ -14,5 +26,13 @@
 }
 
 h3{
+	text-align: center;
+}
+
+p{
+	text-align: center;
+}
+
+.thumbnail{
 	text-align: center;
 }

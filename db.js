@@ -3,7 +3,8 @@ var salt = 'yolado';
 
 var moment = require('moment'),
 	mongoose = require('mongoose'),
-	sha256	 = require(__dirname + '/sha256');
+	sha256	 = require(__dirname + '/sha256'),
+	gravatar = require('gravatar');
 mongoose.connect('mongodb://localhost/hackathon');
 
 var Schema = mongoose.Schema;
@@ -14,10 +15,11 @@ var userSchema = new Schema({
   email: String,
   password: String,
   date: String,
-  games: Array,
+  games: String,
   recived: Array,
   xboxProfile: String,
-  steamId: String
+  steamId: String,
+  avatar: String
 });
 
 var gameSchema = new Schema({
@@ -31,8 +33,8 @@ var gameSchema = new Schema({
 mongoose.model('user', userSchema);
 var User = mongoose.model('user');
 
-mongoose.model('games', gameSchema);
-var Game = mongoose.model('games')
+mongoose.model('game', gameSchema);
+var Game = mongoose.model('game');
 
 // Db Methods
 
@@ -40,16 +42,22 @@ module.exports.register = function (body, callback){
 	var user = new User();
 	user.username = body.username;
 	user.password = sha256(body.password, salt);
-	user.email    = body.email;	
+	user.email    = body.email;
+	user.avatar   = gravatar.url(body.email);
+	user.date 	  = moment();
 	callback(user);
 	user.save();
 }
 
 
-module.exports.addGameToUser = function  (username, gameId, dataGame, callback) {
+module.exports.addGameToUser = function  (username, gameId, callback) {
 	User.findOne({username: username}, function (err, user){
-		var data = {gameData: dataGame, dateAdded: moment(), achivements: []}
-		user.games[gameId] = data;
+		var data = {dateAdded: moment(), _id: user._id}
+		if (user.games){
+			user.games += JSON.stringify(data)+',';
+		} else{
+			user.games = JSON.stringify(data)+',';
+		}
 		var result = user;
 		user.save();
 		callback(result);
@@ -63,8 +71,9 @@ module.exports.createGame = function (gameData, callback) {
 	game.data = JSON.stringify(gameData.data);
 	game.date = moment();
 	game.author = gameData.author;
-	callback(game);
+	var result = game;
 	game.save();
+	callback(result);
 };
 
 module.exports.addUserXboxProfile = function (username, profile, callback){
@@ -98,14 +107,10 @@ module.exports.getUserDataGameById = function (id, username, callback){
 	User.find({username: username}, function (err, user){
 		callback(user.games[id]);
 	});
-};
+}
 
-module.exports.getPublishedGames = function (callback){
-	Game.find().all(function (err, games){
-		if(err){
-			console.log(err);
-		}
-		console.log(games);
+module.exports.getGames = function (callback){
+	Game.find({}, function (err, games){
 		callback(games);
 	});
 };

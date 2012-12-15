@@ -1,0 +1,38 @@
+extends layout
+block append content
+	ul.nav.nav-tabs.nav-pills
+		li
+			a(href="/#{route}/xbox") Profile
+		li.active
+			a Achivements
+	.hd
+		img.avatar(src="#{game.BoxArt}")
+		span.gametitle #{game.Title}
+		br
+		span.l Unlocked Achievements: #{game.EarnedAchievements}
+		br
+		span.l Achievements Points: 
+		span.label.label-info #{game.EarnedGamerScore}G
+		br
+		span.l Achievements progress
+		div.progress(style="width: 400px;")
+			- var earned = (game.PossibleAchievements*game.EarnedAchievements)/100
+			div.bar.bar-success(style="width: #{earned}%;")
+			- var percent = 100 - earned;
+			div.bar.bar-warning(style="width: #{percent}%;")
+	section
+		.games
+			ul.thumbnails
+					each achievement in game.Achievements
+						- if(achievement.IsSecret == "yes"){
+						- } else {
+							li.span3
+								.thumbnail
+									if achievement.Unlocked == "no"
+										p
+											i.icon-lock
+											|   Locked
+									h3 #{achievement.Title}
+									img(src="#{achievement.TileUrl}")
+									p #{achievement.Description}
+						- }

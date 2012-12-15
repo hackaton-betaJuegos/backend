@@ -13,3 +13,11 @@ module.exports.getProfileFromGamertag = function (gamertag, callback){
 		callback(JSON.parse(body));
 	});
 }
+
+
+module.exports.getAchivementsFromIdAndGamertag = function (id, gamertag, callback){
+	var url = 'http://www.xboxleaders.com/api/achievements.json?gamertag='+gamertag+'&titleid='+id.toString();
+	request.get(url, function (err, response, body){
+		callback(JSON.parse(body));
+	});	
+};
