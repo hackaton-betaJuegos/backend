@@ -1,0 +1,8 @@
+extends layout
+append content
+	form(method="post", action="/goUser").form-horizontal
+		label Username:
+		input(type="text", name="user", required, placeholder="Username")
+		label Password:
+		input(type="password", name="password", required, placeholder="pass")
+		button.btn.btn-primary Login

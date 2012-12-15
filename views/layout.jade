@@ -33,5 +33,9 @@ html
 							span.icon-bar
 							span.icon-bar
 						a.brand(href='/') GamesProfile
+						block links
+						form(method="post", action="/goUser").navbar-search.pull-right
+							input.span2.search-query(type='text', name="user", placeholder="Go to User")
+
 		div.hero-unit
 			block content

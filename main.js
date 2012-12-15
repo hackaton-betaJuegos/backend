@@ -21,6 +21,10 @@ app.configure(function (){
   });
 });
 
+app.get('/', function (req, res){
+  res.render('index');
+});
+
 app.get('/register', function (req, res){
 	res.render('register.jade');
 });
@@ -28,8 +32,16 @@ app.get('/register', function (req, res){
 app.post('/register', function (req, res){
   var post = req.body;
   db.register(post, function (user) {
-    res.send(user);
+    res.redirect('/'+user.username);
   });
+});
+
+app.get('/login', function (req, res){
+  res.render('login');
+});
+
+app.post('/goUser', function (req, res){
+  res.redirect('/'+req.body.user);
 });
 
 app.get('/api/user/:username', function (req, res){
