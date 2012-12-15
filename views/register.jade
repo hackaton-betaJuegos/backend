@@ -1,0 +1,9 @@
+extends layout
+block append content
+	form()
+		div.input-prepend
+			input.appendedInput(type="text", name="username", required)
+		div.input-prepend
+			input(type="password", name="password", required)
+		input(type="email", name="email", required)
+		button.btn.btn-primary(type="submit") Register

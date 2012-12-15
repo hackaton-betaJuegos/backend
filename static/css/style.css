@@ -1,0 +1,18 @@
+.header{
+	text-align: center;
+}
+
+.gt{
+	padding-left: 5px;
+	font-size: 50px;
+	vertical-align: middle;
+}
+.last{
+	padding-left: 10px;
+	font-variant: inherit;
+	vertical-align: middle;
+}
+
+h3{
+	text-align: center;
+}

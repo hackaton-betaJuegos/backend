@@ -1,0 +1,33 @@
+extends layout
+block append content
+	ul.nav.nav-tabs.nav-pills
+		li.active
+			a(href="/#{route}/xbox") Xbox
+		li
+			a(href="/#{route}/xbox/achivements") Achivements
+	.header
+		img.avatar(src="#{profile.AvatarLarge}")
+		span.gt #{profile.Gamertag}
+		br
+		h5.last #{profile.OnlineStatus}
+	section
+		.body
+			//- img(src="#{profile.AvatarBody}")
+			.games
+				.achivements
+					h4 Total games: #{games.GameCount}
+					span Achivements Points: 
+					span.label.label-info #{games.TotalEarnedGamerScore}G
+					h4 Achivements progress
+					div.progress(style="")
+						div.bar.bar-success(style="width: #{games.TotalPercentCompleted}%;")
+						- var percent = 100 - games.TotalPercentCompleted;
+						div.bar.bar-warning(style="width: #{percent}%;")
+					img(src="#{profile.AvatarBody}")
+				ul.thumbnails
+					each game in games.PlayedGames
+						li.span3
+							.thumbnail
+								img(src="#{game.LargeBoxArt}")
+								a(href="#{game.Url}")
+									h3 #{game.Title}
