@@ -1,4 +1,5 @@
-var express = require('express'),
+var db    = require(__dirname + '/db'),
+  express = require('express'),
 	request = require('request');
 // 	steam = require(__dirname + '/steam'),
  	xbox = require(__dirname + '/xbox');
@@ -23,19 +24,49 @@ app.get('/register', function (req, res){
 	res.render('register.jade');
 });
 
-app.get('/:profile/xbox', function (req, res){
-	var gamertag = req.params.profile
-	xbox.getProfileFromGamertag(gamertag, function (profile){
-		xbox.getGamesFromGamertag(gamertag, function (games) {
-			res.render('xbox_profile.jade', {profile: profile.Data, games: games.Data, route: req.params.profile});
-		});
-	});
+app.post('/register', function (req, res){
+  var post = req.body;
+  db.register(post, function (user) {
+    res.send(user);
+  });
 });
 
-// http://www.xboxleaders.com/api/games.json?gamertag=
+app.get('/api/:username', function (req, res){
+  db.getUserDataByUsername(req.params.username, function (user){
+    res.send(user);
+  });
+});
 
-// 'http://www.xboxleaders.com/api/profile.json?gamertag=ESPGeekGamer
+app.get('/addGame', function (req, res){
+  res.render('addgame.jade');
+});
 
-// https://avatar-ssl.xboxlive.com/avatar/ESPGeekGamer/avatar-body.png
+app.post('/api/addGame', function (req, res){
+  db.createGame(req.body, function (game) {
+    res.send(game);
+  });
+});
 
+app.get('/api/publishedGames', function (req, res){
+  db.getPublishedGames(function (games){
+    res.send(games);
+  });
+});
+
+app.get('/api/addXbox/:username/:profile', function (req, res){
+  db.addUserXboxProfile(req.params.username, req.params.profile, function (user) {
+    res.send(user);
+  });
+});
+
+app.get('/:username/xbox', function (req, res){
+  db.getUserDataByUsername(req.params.username, function (username){
+  	var gamertag = username.xboxProfile;
+    xbox.getProfileFromGamertag(gamertag, function (profile){
+  		xbox.getGamesFromGamertag(gamertag, function (games) {
+  			res.render('xbox_profile.jade', {profile: profile.Data, games: games.Data, route: req.params.username});
+  		});
+  	});
+  });
+});
 app.listen(80);

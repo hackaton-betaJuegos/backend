@@ -1,9 +1,19 @@
 extends layout
 block append content
-	form()
+	form(method="post", action="/register").block-form
+		label Game Name:
 		div.input-prepend
-			input.appendedInput(type="text", name="username", required)
+			span.add-on
+				i.icon-user
+			input.appendedInput(type="text", name="username", required, placeholder="Gordon_Freeman")
+		label Game Author:
 		div.input-prepend
-			input(type="password", name="password", required)
-		input(type="email", name="email", required)
+			span.add-on
+				i.icon-briefcase			
+			input.appendedInput(type="password", name="password", required, placeholder="Password")
+		label Game Description:
+		div.input-prepend
+			span.add-on
+				i.icon-envelope
+			input.appendedInput(type="email", name="email", required, placeholder="email@domain.com")
 		button.btn.btn-primary(type="submit") Register
